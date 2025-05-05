@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Triage Assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .chat-pane {
+      max-width: 600px;
+      margin: 50px auto;
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .chat-box {
+      height: 300px;
+      overflow-y: scroll;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      padding: 10px;
+    }
+    .input-box {
+      display: flex;
+      gap: 10px;
+    }
+    .input-box input[type="text"] {
+      flex: 1;
+      padding: 10px;
+    }
+    .input-box button {
+      padding: 10px 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-pane">
+    <div class="chat-box" id="chat-box"></div>
+    <div class="input-box">
+      <input type="text" id="chat-input" placeholder="Type your message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+    <form action="/" method="POST" enctype="multipart/form-data">
+      <input type="file" name="file">
+      <input type="submit" value="Upload">
+    </form>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chat-box");
+    const chatInput = document.getElementById("chat-input");
+
+    const socket = new WebSocket("ws://localhost:8000/ws");
+
+    socket.onopen = function () {
+      console.log("WebSocket connection established.");
+    };
+
+    socket.onmessage = function (event) {
+      appendMessage("Assistant: " + event.data);
+    };
+
+    socket.onerror = function (error) {
+      console.error("WebSocket error:", error);
+    };
+
+    function sendMessage() {
+      const message = chatInput.value;
+      if (message.trim() === "") return;
+      appendMessage("You: " + message);
+      socket.send(message);
+      chatInput.value = "";
+    }
+
+    function appendMessage(message) {
+      const msgDiv = document.createElement("div");
+      msgDiv.textContent = message;
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  </script>
+</body>
+</html>
