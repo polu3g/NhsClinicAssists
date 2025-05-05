@@ -26,7 +26,7 @@ assistant = client.beta.assistants.create(
         "for readability, but avoid inline styles or scripts."
     ),
     tools=[{"type": "file_search"}],
-    tool_resources={"file_search": {"vector_store_ids": ["vs_2wCXgSABvPuHtCoknfus0Ikj"]}},
+    tool_resources={"file_search": {"vector_store_ids": ["vs_DgQCx8pjbMpnpnK1SShLlSSt"]}},
     temperature=0.7,
     top_p=1
 )
