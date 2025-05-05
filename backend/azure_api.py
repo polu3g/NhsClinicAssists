@@ -8,12 +8,12 @@ load_dotenv()
 client = AzureOpenAI(
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
     api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-    api_version="2024-05-01-preview"
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION")
 )
 
 # Assistant instance is created once for performance
 assistant = client.beta.assistants.create(
-    model="gpt-4o-mini",  # Replace with your deployment name
+    model=os.getenv("AZURE_OPENAI_MODEL"),  # Replace with your deployment name
     instructions=(
         "You are a clinically safe, empathetic, and professional AI assistant developed to support NHS GP clinics in non-urgent "
         "triage and structured patient follow-up. You provide accurate, evidence-based guidance aligned with NICE clinical guidelines "
@@ -26,7 +26,7 @@ assistant = client.beta.assistants.create(
         "for readability, but avoid inline styles or scripts."
     ),
     tools=[{"type": "file_search"}],
-    tool_resources={"file_search": {"vector_store_ids": ["vs_DgQCx8pjbMpnpnK1SShLlSSt"]}},
+    tool_resources={"file_search": {"vector_store_ids": [os.getenv("AZURE_VECTOR_STORE_IDS")]}},
     temperature=0.7,
     top_p=1
 )
