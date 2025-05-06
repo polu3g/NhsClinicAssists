@@ -26,6 +26,7 @@ assistant = client.beta.assistants.create(
         "for readability, but avoid inline styles or scripts."
     ),
     tools=[{"type": "file_search"}],
+    # You can extract Intent of the user query (GP or Patient) and use it to select the right vector store
     tool_resources={"file_search": {"vector_store_ids": [os.getenv("AZURE_VECTOR_STORE_IDS")]}},
     temperature=0.7,
     top_p=1
